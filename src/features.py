@@ -102,15 +102,16 @@ def task_features(g: CodeGraph, task):
     traceback_present = int(bool(trace_files))
 
     CAP = 8
-    def hop(src):
+    def hop(src, edges="all"):
         if not src or not gold:
             return CAP + 1
-        dist = g.bfs(src, CAP)
+        dist = g.bfs(src, CAP, edges)
         ds = [dist[n] for n in gold if n in dist]
         return min(ds) if ds else CAP + 1
 
     hop_spec = hop(anchors_spec)
     hop_all = hop(anchors_all)
+    hop_spec_call = hop(anchors_spec, "call")     # robustness: call edges only, no containment
 
     amb = [len(g.by_short[g.nodes[n]["qual"].rsplit(".", 1)[-1]]) for n in gold] or [0]
     fanin = [sum(g.rcalls.get(n, {}).values()) for n in gold] or [0]
@@ -138,7 +139,7 @@ def task_features(g: CodeGraph, task):
         n_issue_tokens=len(toks), n_anchors_all=len(anchors_all), n_anchors_spec=len(anchors_spec),
         gold_named_in_issue=gold_named, gold_file_in_issue=gold_file_in_issue,
         traceback_present=traceback_present,
-        hop_spec=hop_spec, hop_all=hop_all,
+        hop_spec=hop_spec, hop_all=hop_all, hop_spec_call=hop_spec_call,
         gold_ambiguity_max=max(amb), gold_ambiguity_mean=sum(amb) / len(amb),
         gold_fanin_max=max(fanin), gold_fanout_max=max(fanout),
         gold_lines_sum=sum(lines), gold_spread=spread, blast2=blast2, gold_file_defs=file_defs,
@@ -149,6 +150,7 @@ def task_features(g: CodeGraph, task):
 
 
 def main(tasks_path, repos_dir, out_path, only_repo=None):
+    __import__("os").makedirs(__import__("os").path.dirname(out_path) or ".", exist_ok=True)
     tasks = json.load(open(tasks_path))
     by_repo = defaultdict(list)
     for t in tasks:

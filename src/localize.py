@@ -56,7 +56,7 @@ def node_texts(repo, commit, g):
             _TEXT_CACHE[sha] = lines
         for n in nids:
             nd = g.nodes[n]
-            body = "\n".join(lines[nd["lineno"] - 1: min(nd["end"], nd["lineno"] + 80)])
+            body = "\n".join(lines[nd["lineno"] - 1: nd["end"]])
             texts[n] = f"{p} {nd['qual']} {nd['qual']} {body}"
     return texts
 
@@ -90,6 +90,7 @@ def bm25_rank(query, texts, k1=1.2, b=0.75):
 
 
 def main(tasks_path, repos_dir, out_path):
+    __import__("os").makedirs(__import__("os").path.dirname(out_path) or ".", exist_ok=True)
     tasks = json.load(open(tasks_path))
     by_repo = defaultdict(list)
     for t in tasks:

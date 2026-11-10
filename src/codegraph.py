@@ -211,12 +211,14 @@ class CodeGraph:
                     self.rcalls[c][nid] = self.rcalls[c].get(nid, 0) + w
 
     # ------------------------------------------------------------------ queries
-    def neighbors(self, nid):
-        """Undirected neighbourhood: calls, called-by, containment."""
-        out = set(self.calls.get(nid, ())) | set(self.rcalls.get(nid, ())) | self.contain.get(nid, set())
+    def neighbors(self, nid, edges="all"):
+        """Undirected neighbourhood: calls and called-by, plus containment unless edges == "call"."""
+        out = set(self.calls.get(nid, ())) | set(self.rcalls.get(nid, ()))
+        if edges != "call":
+            out |= self.contain.get(nid, set())
         return out
 
-    def bfs(self, sources, max_depth=8):
+    def bfs(self, sources, max_depth=8, edges="all"):
         dist = {s: 0 for s in sources if s in self.nodes}
         frontier = list(dist)
         d = 0
@@ -224,7 +226,7 @@ class CodeGraph:
             d += 1
             nxt = []
             for u in frontier:
-                for v in self.neighbors(u):
+                for v in self.neighbors(u, edges):
                     if v not in dist:
                         dist[v] = d
                         nxt.append(v)
