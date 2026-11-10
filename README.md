@@ -1,6 +1,6 @@
 # Where the Fix Lives
 
-Code, data and paper for **"Where the Fix Lives: Code Structure and the Triage Gap for Local Coding Agents"**
+Code, data and paper for **"Where the Fix Lives: Code-Graph Structure and the Triage Gap for Local Coding Agents"**
 by Haresh G. (Kaggle: Haresh276), Gemma 4 Developer Agent Paper Track, 2026.
 
 **Question.** Which properties of a bug's fix location (whether the issue names anything connected to it in the code
