@@ -2,4 +2,6 @@ numpy
 pandas
 scipy
 scikit-learn
+statsmodels
 matplotlib
+markdown  # only for render_pdf.py (also needs playwright + chromium)
