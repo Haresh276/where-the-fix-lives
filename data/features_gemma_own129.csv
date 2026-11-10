@@ -1,0 +1,130 @@
+task_id,repo,repo_nodes,n_gold_files,n_gold_nodes,gold_spread,gold_fanin_max,gold_ambiguity_max,blast2,src_patch_lines,needs_missing_pkg,title
+fastapi_11194,fastapi,2122,1,1,0,1.0,1,27,7,False,🐛 Fix validation error when `File` is declared after `Form` parameter (#11194)
+fastapi_11355,fastapi,2275,1,2,2,1.0,1,27,11,False,🐛 Fix evaluating stringified annotations in Python 3.10 (#11355)
+fastapi_12942,fastapi,2142,1,1,0,1.0,1,6,3,True,🐛 Fix tagged discriminated union not recognized as body field (#12942)
+fastapi_13207,fastapi,2273,1,2,3,1.3333333333333333,4,53,14,False,🐛 Fix OpenAPI schema support for computed fields when using `separate_input_output_schemas=False` (#13207)
+fastapi_13537,fastapi,2273,1,1,0,1.0,1,38,3,False,"🐛 Fix support for form values with empty strings interpreted as missing (`None` if that's the default), for compatibility with HTML forms (#13537)"
+fastapi_13713,fastapi,2122,2,3,3,2.0,57,87,31,True,✨ Add OpenAPI `external_docs` parameter to `FastAPI` (#13713)
+fastapi_13786,fastapi,2258,4,23,4,3.0,65,689,208,True,🐛 Use `401` status code in security classes when credentials are missing (#13786)
+fastapi_13920,fastapi,1856,1,1,0,1.0,1,236,4,False,✨ Add support for PEP695 `TypeAliasType` (#13920)
+fastapi_14077,fastapi,2121,2,2,3,2.0,1,645,7,False,"⬆️ Upgrade Starlette supported version range to >=0.40.0,<0.49.0 (#14077)"
+fastapi_14099,fastapi,2122,3,3,4,0.0,57,741,400,False,"🐛 Fix support for `StreamingResponse`s with dependencies with `yield` or `UploadFile`s, close after the response is done (#14099)"
+fastapi_14186,fastapi,2230,10,30,7,22.0,4,889,364,False,🐛 Fix internal Pydantic v1 compatibility (warnings) for Python 3.14 and Pydantic 2.12.1 (#14186)
+fastapi_14246,fastapi,2248,1,1,0,0.25,4,30,28,True,🐛 Fix separation of schemas with nested models introduced in 0.119.0 (#14246)
+fastapi_14258,fastapi,1859,1,1,0,0.0,2,46,4,False,✨ Show a clear error on attempt to include router into itself (#14258)
+fastapi_14262,fastapi,2243,7,16,4,104.5,64,903,218,False,"✨ Add support for dependencies with scopes, support `scope=""request""` for dependencies with `yield` that exit before the response is sent (#14262)"
+fastapi_14266,fastapi,2243,1,1,0,4.0,1,83,18,True,🐛 Fix security schemes in OpenAPI when added at the top level app (#14266)
+fastapi_14297,fastapi,2273,1,1,0,0.3333333333333333,3,14,7,False,🐛 Fix optional sequence handling in `serialize sequence value` with Pydantic V2 (#14297)
+fastapi_14301,fastapi,2251,1,1,0,2.0,1,29,5,False,"🐛 Fix `Depends(func, scope='function')` for top level (parameterless) dependencies (#14301)"
+fastapi_14303,fastapi,2273,1,1,0,1.0,1,38,8,True,🐛 Fix parsing extra `Form` parameter list (#14303)
+fastapi_14306,fastapi,2278,2,11,5,10.0,66,760,137,False,🚸  Improve tracebacks by adding endpoint metadata (#14306)
+fastapi_14349,fastapi,2251,1,1,0,2.0,1,2,12,True,"🐛 Fix handling of JSON Schema attributes named ""$ref"" (#14349)"
+fastapi_14356,fastapi,2273,1,1,0,4.0,1,58,11,True,🐛 Fix parsing extra non-body parameter list (#14356)
+fastapi_14360,fastapi,2273,1,1,0,4.0,1,648,3,True,🐛 Fix Query\Header\Cookie parameter model alias (#14360)
+fastapi_14361,fastapi,2273,1,1,0,1.0,1,7,2,True,"🐛 Avoid accessing non-existing ""$ref"" key for Pydantic v2 compat remapping (#14361)"
+fastapi_14371,fastapi,2374,4,10,5,4.0,67,804,62,True,🐛 Fix parameter aliases (#14371)
+fastapi_14372,fastapi,2251,2,1,0,1.0,1,309,7,False,"♻️ Make the result of `Depends()` and `Security()` hashable, as a workaround for other tools interacting with these internal parts (#14372)"
+fastapi_14419,fastapi,2271,2,5,3,4.0,1,695,62,False,🐛 Cache dependencies that don't use scopes and don't have sub-dependencies with scopes (#14419)
+fastapi_14430,fastapi,2274,1,1,0,0.3333333333333333,3,14,4,False,🐛 Fix optional sequence handling with new union syntax from Python 3.10 (#14430)
+fastapi_14448,fastapi,2274,2,6,4,2.0,1,39,106,False,"🐛 Fix support for functools wraps and partial combined, for async and regular functions and classes in path operations and dependencies (#14448)"
+fastapi_14455,fastapi,2275,1,1,0,1.0,1,42,13,True,"🐛 Fix OpenAPI security scheme OAuth2 scopes declaration, deduplicate security schemes with different scopes (#14455)"
+fastapi_14458,fastapi,2278,1,3,2,0.0,1,12,7,False,🐛 Fix using class (not instance) dependency that has `__call__` method (#14458)
+fastapi_14459,fastapi,2275,3,6,5,5.0,1,116,71,True,"🐛 Fix OAuth2 scopes in OpenAPI in extra corner cases, parent dependency with scopes, sub-dependency security scheme without scopes (#14459)"
+fastapi_14463,fastapi,1855,1,1,0,2.0,1,511,3,False,🐛 Fix OpenAPI duplication of `anyOf` refs for app-level responses with specified `content` and `model` as `Union` (#14463)
+fastapi_14479,fastapi,1855,1,1,0,1.0,1,234,2,False,🚸 Improve error message for invalid query parameter type annotations (#14479)
+fastapi_14482,fastapi,2372,1,3,2,4.0,3,38,32,True,🐛 Fix handling arbitrary types when using `arbitrary_types_allowed=True` (#14482)
+fastapi_14485,fastapi,2372,1,2,2,1.0,1,26,19,True,"🐛 Fix support for `if TYPE_CHECKING`,  non-evaluated stringified annotations (#14485)"
+fastapi_14487,fastapi,2373,0,0,0,0.0,0,0,0,False,"📝 Update docs about re-raising validation errors, do not include string as is to not leak information (#14487)"
+fastapi_14492,fastapi,1856,0,0,0,0.0,0,0,0,False,📝 Fix example of license identifier in documentation (#14492)
+fastapi_14512,fastapi,2373,1,1,0,0.0,1,12,52,True,🐛 Fix support for tagged union with discriminator inside of `Annotated` with `Body()` (#14512)
+fastapi_14583,fastapi,1913,2,2,1,4.0,62,589,24,True,🔊 Add deprecation warnings when using `pydantic.v1` (#14583)
+fastapi_14605,fastapi,1909,7,9,9,4.0,62,671,44,True,🔊 Add a custom `FastAPIDeprecationWarning` (#14605)
+fastapi_14609,fastapi,1910,13,51,7,21.333333333333332,62,923,2009,True,➖ Drop support for `pydantic.v1` (#14609)
+fastapi_14616,fastapi,1856,1,1,0,3.0,1,490,12,False,🐛 Fix using `Json[list[str]]` type (issue #10997) (#14616)
+fastapi_14786,fastapi,1856,1,1,0,6.0,1,27,2,False,🐛 Strip whitespaces from `Authorization` header credentials (#14786)
+fastapi_14791,fastapi,1856,1,0,0,0.0,0,0,2,True,🐛 Update `ValidationError` schema to include `input` and `ctx` (#14791)
+fastapi_14794,fastapi,1856,1,1,0,1.0,1,236,5,False,✨ Allow `Response` type hint as dependency annotation (#14794)
+fastapi_14851,fastapi,1857,1,2,2,0.0,54,52,157,False,"♻️ Re-implement `on_event` in FastAPI for compatibility with the next Starlette, while keeping backwards compatibility (#14851)"
+fastapi_14873,fastapi,1859,1,1,0,0.0,56,61,21,False,🐛 Fix `on_startup` and `on_shutdown` parameters of `APIRouter` (#14873)
+fastapi_14953,fastapi,1376,2,1,0,0.0,2,7,21,True,"🐛 Fix JSON Schema for files, use `contentMediaType` instead of `format: binary` (#14953)"
+fastapi_14962,fastapi,1383,2,3,2,1.0,6,430,49,True,"✨ Serialize JSON response with Pydantic (in Rust), when there's a Pydantic return type or response model (#14962)"
+fastapi_14964,fastapi,1384,1,2,4,1.0,1,10,52,True,🗑️ Deprecate `ORJSONResponse` and `UJSONResponse` (#14964)
+fastapi_14978,fastapi,1389,2,8,3,2.0,51,494,68,True,🔒️ Add `strict_content_type` checking for JSON requests (#14978)
+fastapi_14986,fastapi,1391,2,3,3,3.0,2,368,34,False,♻️ Refactor logic to handle OpenAPI and Swagger UI escaping data (#14986)
+fastapi_15023,fastapi,1417,0,0,0,0.0,0,0,0,True,📝 Update docs for responses and new stream with `yield` (#15023)
+fastapi_15030,fastapi,1418,4,5,3,2.0,51,516,424,True,✨ Add support for Server Sent Events (#15030)
+fastapi_15280,fastapi,1442,1,1,0,0.0,2,38,60,False,✨ Add support for `@app.vibe()` (#15280)
+fastapi_15588,fastapi,1448,1,2,9,6.0,1,16,23,False,♻️ Validate Server Sent Event fields to avoid applications from sending broken data (#15588)
+fastapi_15589,fastapi,1450,1,1,0,4.0,1,388,4,False,♻️ Do not accept underscore headers when using `convert_underscores=True` (the default) (#15589)
+fastapi_15661,fastapi,1450,0,0,0,0.0,0,0,0,False,👷 Automate release preparation (#15661)
+fastapi_15745,fastapi,1459,3,16,9,2.0,51,479,1208,True,♻️ Refactor internals to preserve `APIRouter` and `APIRoute` instances (#15745)
+fastapi_15763,fastapi,1493,1,1,0,0.0,2,65,13,False,"🐛 Fix bug, allow empty path in path operation in prefixless router (#15763)"
+fastapi_15785,fastapi,1494,2,3,1,3.0,1,52,81,False,✨ Add `iter_route_contexts()` for advanced use cases that used to use `router.routes` (e.g. Jupyverse) (#15785)
+fastapi_15800,fastapi,1504,2,8,5,5.0,51,100,622,False,"✨ Add support for `app.frontend(""/"", directory=""dist"")` and `router.frontend(""/"", directory=""dist"")` (#15800)"
+fastapi_5077,fastapi,2274,1,2,2,1.0,1,27,6,False,✨ Add support for wrapped functions (e.g. `@functools.wraps()`) used with forward references (#5077)
+fastapi_5624,fastapi,2271,1,1,0,4.0,1,85,4,False,🐛 Fix hierarchical security scope propagation (#5624)
+fastapi_9425,fastapi,2122,1,1,0,2.0,1,5,2,False,✨  Allow `None` as return type for bodiless responses (#9425)
+fastapi_9555,fastapi,2273,1,4,2,0.0,1,6,22,False,✨ Handle wrapped dependencies (#9555)
+fastapi_9753,fastapi,2274,1,1,0,0.0,1,10,7,False,✨ Allow using dependables with `functools.partial()` (#9753)
+httpx_3672,httpx,696,7,19,6,2.5,57,259,79,False,Server connection handling. (#3672)
+requests_6589,requests,285,1,1,0,2.0,1,12,3,False,Merge pull request #6589 from bruceadams/super_len_str_utf-8
+requests_6592,requests,284,1,0,0,0.0,0,0,2,False,Merge pull request #6592 from atatuzuner61/bug/6584
+requests_6629,requests,284,1,1,0,0.5,14,4,10,False,Merge pull request #6629 from Tarty/fix-6628-jsondecode-error-not-deserializable
+requests_6644,requests,285,1,1,0,1.0,1,31,3,False,Merge pull request #6644 from sigmavirus24/bug/6643
+requests_6757,requests,285,2,1,0,2.0,1,12,17,False,Merge pull request #6757 from nateprewitt/urllib-1.x-tests
+requests_7205,requests,285,1,1,0,2.0,1,40,2,False,Fix empty netrc entry usage (#7205)
+requests_7309,requests,285,1,1,0,1.0,1,7,15,False,Fix malformed value parsing for Content-Type (#7309)
+requests_7315,requests,300,1,1,0,1.0,1,38,2,False,Preserve leading slashes in request path_url (#7315)
+requests_7328,requests,285,1,1,0,2.0,1,71,3,False,Prevent Response self-reference in redirect history (#7328)
+requests_7427,requests,300,1,1,0,2.0,1,20,6,False,Port bpo-39057 to Requests (#7427)
+requests_7433,requests,300,1,1,0,1.0,1,27,6,False,Fix `prepare_body` stream detection for `__getattr__`-based file wrappers (#7433)
+requests_7502,requests,300,1,1,0,1.0,1,19,4,False,Fix `_encode_files` detection for `__getattr__`-based file wrappers (#7502)
+requests_7505,requests,300,2,3,2,2.0,5,38,16,False,Add hasattr checks for remaining protocol isinstance checks (#7505)
+rich_2725,rich,1145,1,1,0,1.0,2,207,10,False,Merge pull request #2725 from jonathan-3play/fix_table_box_rendering_order
+rich_2943,rich,1146,1,1,0,0.0,1,50,2,False,Merge pull request #2943 from Textualize/clean-cached-hash
+rich_3006,rich,1144,1,1,0,0.0,1,4,2,False,Merge pull request #3006 from AryazE/master
+rich_3043,rich,1144,1,0,0,0.0,0,0,2,False,Merge pull request #3043 from davep/fix-export-html
+rich_3052,rich,1146,1,5,2,1.0,87,51,33,False,Merge pull request #3052 from seapagan/case-insensitive-prompt-choices
+rich_3061,rich,1142,1,12,4,78.0,87,512,91,False,Merge pull request #3061 from Textualize/tabs-spaces
+rich_3063,rich,1144,1,1,0,4.0,2,46,4,False,Merge pull request #3063 from Textualize/escape-end
+rich_3064,rich,1144,1,1,0,0.0,43,47,17,False,Merge pull request #3064 from Textualize/fix-markdown-table
+rich_3067,rich,1144,1,1,0,7.0,1,50,2,False,Merge pull request #3067 from LukeSavefrogs/master
+rich_3105,rich,1145,1,0,0,0.0,0,0,2,False,Fix #3104 (#3105)
+rich_3130,rich,1144,1,3,2,2.75,87,221,12,False,Merge pull request #3130 from Textualize/fix-table-inline-styles
+rich_3180,rich,1145,2,3,2,1.0,1,134,127,False,Fix double-width characters disappearing when wrapping (#3180)
+rich_3278,rich,1146,1,0,0,0.0,0,0,1,False,Merge pull request #3278 from dosisod/strip-private-escape-sequences
+rich_3296,rich,1146,1,1,0,0.0,43,85,4,False,Merge pull request #3296 from TomJGooding/fix-syntax-include-padding-with-background-color-override
+rich_3454,rich,1148,1,1,0,7.0,1,50,2,False,Merge pull request #3454 from subrat-lima/master
+rich_3468,rich,1146,1,4,2,15.0,1,467,42,False,Merge pull request #3468 from Textualize/broken-pip
+rich_3469,rich,1148,1,1,0,0.0,43,303,2,False,Merge pull request #3469 from Textualize/fix-table-nl
+rich_3470,rich,1148,1,1,0,1.0,1,190,2,False,Merge pull request #3470 from Textualize/fix-record-and-capture
+rich_3471,rich,1148,1,1,0,2.0,1,121,1,False,Merge pull request #3471 from Textualize/fix-append-tokens
+rich_3472,rich,1148,1,1,0,1.0,1,108,4,False,Merge pull request #3472 from Textualize/fix-bad-dataclass
+rich_3480,rich,1148,1,2,1,60.666666666666664,3,415,4,False,Merge pull request #3480 from Textualize/fix-infinite-append
+rich_3486,rich,1148,3,8,6,2.0,2,336,98,False,Merge pull request #3486 from Textualize/fine-grained-errors
+rich_3506,rich,1148,1,2,1,46.0,1,177,17,False,Merge pull request #3506 from Textualize/fix-split-cells
+rich_3518,rich,1149,1,1,0,43.0,1,262,2,False,Merge pull request #3518 from TomJGooding/fix-table-highlight-columns-added-by-add-row
+rich_3521,rich,1149,1,1,0,1.0,1,59,35,False,Merge pull request #3521 from Textualize/splitcells-fix
+rich_3535,rich,1149,2,1,0,1.0,1,48,8,False,Merge pull request #3535 from Textualize/regex-error
+rich_3675,rich,1148,2,4,5,0.0,87,197,41,False,Merge pull request #3675 from Textualize/tty-compatible
+rich_3676,rich,1148,2,5,3,2.0,43,270,13,False,Merge pull request #3676 from Textualize/notes
+rich_3718,rich,1152,1,1,0,0.0,43,257,7,False,Merge pull request #3718 from TomJGooding/fix-panel-fix-title-missing-panel-background
+rich_3772,rich,1149,1,1,0,2.0,1,167,45,False,Merge pull request #3772 from Textualize/fix-traceback-recursion
+rich_3777,rich,1149,2,2,2,0.0,87,186,13,False,Merge pull request #3777 from Textualize/tty-interactive
+rich_3782,rich,1149,1,5,2,1.0,87,384,29,False,Merge pull request #3782 from Textualize/syntax-padding
+rich_3882,rich,1156,1,1,0,1.0,1,57,2,False,Merge pull request #3882 from mgedmin/fix-prompt-error-markup
+rich_3894,rich,1156,1,1,0,2.0,1,146,4,False,Merge pull request #3894 from SebastianSpeitel/non-str-qualname
+rich_3905,rich,1156,1,1,0,2.0,4,79,7,False,Merge pull request #3905 from TomerYogev/extra-blank-line-on-disabled-progress
+rich_3930,rich,1152,26,5,9,12.5,2,107,12856,False,Merge pull request #3930 from Textualize/cell-string
+rich_3934,rich,1155,2,2,3,2.0,87,116,20,False,Merge pull request #3934 from Textualize/empty-live
+rich_3935,rich,1156,1,5,2,3.0,43,266,16,False,Merge pull request #3935 from Textualize/fix-table-padding
+rich_3938,rich,1156,2,2,2,46.0,3,390,45,False,Merge pull request #3938 from Textualize/fix-background-style
+rich_3942,rich,1157,2,4,4,0.0,43,201,70,False,Merge pull request #3942 from Textualize/markdown-style
+rich_3944,rich,1158,1,1,0,3.0,1,18,2,False,Merge pull request #3944 from Textualize/nerf-fonts
+rich_3953,rich,1158,1,2,1,9.0,1,39,26,False,Merge pull request #3953 from Textualize/zwj-fix
+rich_4006,rich,1158,1,1,0,2.0,1,93,45,False,Merge pull request #4006 from Textualize/fix-grapheme-stuck
+rich_4070,rich,1158,9,17,3,8.666666666666666,87,532,128,False,Merge pull request #4070 from KRRT7/upstream/lazy-traceback-logging
+rich_4075,rich,1158,1,2,2,17.0,3,343,15,False,Merge pull request #4075 from Textualize/empty-end
+rich_4076,rich,1158,1,1,0,1.0,1,23,6,False,Merge pull request #4076 from Textualize/ansi-newline
+rich_4077,rich,1158,1,1,0,0.6666666666666666,3,16,3,False,Merge pull request #4077 from Textualize/isattry
+rich_4079,rich,1159,1,1,0,2.75,4,179,7,False,Merge pull request #4079 from Textualize/inline-table-code

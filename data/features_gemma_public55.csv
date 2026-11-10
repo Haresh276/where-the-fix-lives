@@ -1,0 +1,56 @@
+task_id,repo,repo_nodes,n_gold_files,n_gold_nodes,gold_spread,gold_fanin_max,gold_ambiguity_max,blast2,src_patch_lines,needs_missing_pkg,title
+fastapi_11355,fastapi,2275,1,2,2,1.0,1,27,11,False,🐛 Fix evaluating stringified annotations in Python 3.10 (#11355)
+fastapi_12942,fastapi,2142,1,1,0,1.0,1,6,3,True,🐛 Fix tagged discriminated union not recognized as body field (#12942)
+fastapi_13537,fastapi,2273,1,1,0,1.0,1,38,3,False,"🐛 Fix support for form values with empty strings interpreted as missing (`None` if that's the default), for compatibility with HTML forms (#13537)"
+fastapi_13920,fastapi,1856,1,1,0,1.0,1,236,4,False,✨ Add support for PEP695 `TypeAliasType` (#13920)
+fastapi_14099,fastapi,2122,3,3,4,0.0,57,741,400,False,"🐛 Fix support for `StreamingResponse`s with dependencies with `yield` or `UploadFile`s, close after the response is done (#14099)"
+fastapi_14258,fastapi,1859,1,1,0,0.0,2,46,4,False,✨ Show a clear error on attempt to include router into itself (#14258)
+fastapi_14306,fastapi,2278,2,11,5,10.0,66,760,137,False,🚸  Improve tracebacks by adding endpoint metadata (#14306)
+fastapi_14349,fastapi,2251,1,1,0,2.0,1,2,12,True,"🐛 Fix handling of JSON Schema attributes named ""$ref"" (#14349)"
+fastapi_14361,fastapi,2273,1,1,0,1.0,1,7,2,True,"🐛 Avoid accessing non-existing ""$ref"" key for Pydantic v2 compat remapping (#14361)"
+fastapi_14372,fastapi,2251,2,1,0,1.0,1,309,7,False,"♻️ Make the result of `Depends()` and `Security()` hashable, as a workaround for other tools interacting with these internal parts (#14372)"
+fastapi_14448,fastapi,2274,2,6,4,2.0,1,39,106,False,"🐛 Fix support for functools wraps and partial combined, for async and regular functions and classes in path operations and dependencies (#14448)"
+fastapi_14458,fastapi,2278,1,3,2,0.0,1,12,7,False,🐛 Fix using class (not instance) dependency that has `__call__` method (#14458)
+fastapi_14459,fastapi,2275,3,6,5,5.0,1,116,71,True,"🐛 Fix OAuth2 scopes in OpenAPI in extra corner cases, parent dependency with scopes, sub-dependency security scheme without scopes (#14459)"
+fastapi_14463,fastapi,1855,1,1,0,2.0,1,511,3,False,🐛 Fix OpenAPI duplication of `anyOf` refs for app-level responses with specified `content` and `model` as `Union` (#14463)
+fastapi_14479,fastapi,1855,1,1,0,1.0,1,234,2,False,🚸 Improve error message for invalid query parameter type annotations (#14479)
+fastapi_14482,fastapi,2372,1,3,2,4.0,3,38,32,True,🐛 Fix handling arbitrary types when using `arbitrary_types_allowed=True` (#14482)
+fastapi_14485,fastapi,2372,1,2,2,1.0,1,26,19,True,"🐛 Fix support for `if TYPE_CHECKING`,  non-evaluated stringified annotations (#14485)"
+fastapi_14487,fastapi,2373,0,0,0,0.0,0,0,0,False,"📝 Update docs about re-raising validation errors, do not include string as is to not leak information (#14487)"
+fastapi_14492,fastapi,1856,0,0,0,0.0,0,0,0,False,📝 Fix example of license identifier in documentation (#14492)
+fastapi_14512,fastapi,2373,1,1,0,0.0,1,12,52,True,🐛 Fix support for tagged union with discriminator inside of `Annotated` with `Body()` (#14512)
+fastapi_14609,fastapi,1910,13,51,7,21.333333333333332,62,923,2009,True,➖ Drop support for `pydantic.v1` (#14609)
+fastapi_14786,fastapi,1856,1,1,0,6.0,1,27,2,False,🐛 Strip whitespaces from `Authorization` header credentials (#14786)
+fastapi_14791,fastapi,1856,1,0,0,0.0,0,0,2,True,🐛 Update `ValidationError` schema to include `input` and `ctx` (#14791)
+fastapi_14794,fastapi,1856,1,1,0,1.0,1,236,5,False,✨ Allow `Response` type hint as dependency annotation (#14794)
+fastapi_14851,fastapi,1857,1,2,2,0.0,54,52,157,False,"♻️ Re-implement `on_event` in FastAPI for compatibility with the next Starlette, while keeping backwards compatibility (#14851)"
+fastapi_14873,fastapi,1859,1,1,0,0.0,56,61,21,False,🐛 Fix `on_startup` and `on_shutdown` parameters of `APIRouter` (#14873)
+fastapi_14962,fastapi,1383,2,3,2,1.0,6,430,49,True,"✨ Serialize JSON response with Pydantic (in Rust), when there's a Pydantic return type or response model (#14962)"
+fastapi_14964,fastapi,1384,1,2,4,1.0,1,10,52,True,🗑️ Deprecate `ORJSONResponse` and `UJSONResponse` (#14964)
+fastapi_14978,fastapi,1389,2,8,3,2.0,51,494,68,True,🔒️ Add `strict_content_type` checking for JSON requests (#14978)
+fastapi_14986,fastapi,1391,2,3,3,3.0,2,368,34,False,♻️ Refactor logic to handle OpenAPI and Swagger UI escaping data (#14986)
+fastapi_15023,fastapi,1417,0,0,0,0.0,0,0,0,True,📝 Update docs for responses and new stream with `yield` (#15023)
+fastapi_15030,fastapi,1418,4,5,3,2.0,51,516,424,True,✨ Add support for Server Sent Events (#15030)
+fastapi_15280,fastapi,1442,1,1,0,0.0,2,38,60,False,✨ Add support for `@app.vibe()` (#15280)
+fastapi_15588,fastapi,1448,1,2,9,6.0,1,16,23,False,♻️ Validate Server Sent Event fields to avoid applications from sending broken data (#15588)
+fastapi_15589,fastapi,1450,1,1,0,4.0,1,388,4,False,♻️ Do not accept underscore headers when using `convert_underscores=True` (the default) (#15589)
+fastapi_15661,fastapi,1450,0,0,0,0.0,0,0,0,False,👷 Automate release preparation (#15661)
+fastapi_9425,fastapi,2122,1,1,0,2.0,1,5,2,False,✨  Allow `None` as return type for bodiless responses (#9425)
+httpx_3672,httpx,696,7,19,6,2.5,57,259,79,False,Server connection handling. (#3672)
+requests_7205,requests,285,1,1,0,2.0,1,40,2,False,Fix empty netrc entry usage (#7205)
+requests_7309,requests,285,1,1,0,1.0,1,7,15,False,Fix malformed value parsing for Content-Type (#7309)
+requests_7315,requests,300,1,1,0,1.0,1,38,2,False,Preserve leading slashes in request path_url (#7315)
+requests_7328,requests,285,1,1,0,2.0,1,71,3,False,Prevent Response self-reference in redirect history (#7328)
+requests_7427,requests,300,1,1,0,2.0,1,20,6,False,Port bpo-39057 to Requests (#7427)
+requests_7433,requests,300,1,1,0,1.0,1,27,6,False,Fix `prepare_body` stream detection for `__getattr__`-based file wrappers (#7433)
+requests_7502,requests,300,1,1,0,1.0,1,19,4,False,Fix `_encode_files` detection for `__getattr__`-based file wrappers (#7502)
+requests_7505,requests,300,2,3,2,2.0,5,38,16,False,Add hasattr checks for remaining protocol isinstance checks (#7505)
+rich_3278,rich,1146,1,0,0,0.0,0,0,1,False,Merge pull request #3278 from dosisod/strip-private-escape-sequences
+rich_3894,rich,1156,1,1,0,2.0,1,146,4,False,Merge pull request #3894 from SebastianSpeitel/non-str-qualname
+rich_3944,rich,1158,1,1,0,3.0,1,18,2,False,Merge pull request #3944 from Textualize/nerf-fonts
+rich_4006,rich,1158,1,1,0,2.0,1,93,45,False,Merge pull request #4006 from Textualize/fix-grapheme-stuck
+rich_4070,rich,1158,9,17,3,8.666666666666666,87,532,128,False,Merge pull request #4070 from KRRT7/upstream/lazy-traceback-logging
+rich_4075,rich,1158,1,2,2,17.0,3,343,15,False,Merge pull request #4075 from Textualize/empty-end
+rich_4076,rich,1158,1,1,0,1.0,1,23,6,False,Merge pull request #4076 from Textualize/ansi-newline
+rich_4077,rich,1158,1,1,0,0.6666666666666666,3,16,3,False,Merge pull request #4077 from Textualize/isattry
+rich_4079,rich,1159,1,1,0,2.75,4,179,7,False,Merge pull request #4079 from Textualize/inline-table-code
