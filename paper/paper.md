@@ -35,7 +35,7 @@ Prior work predicts task difficulty from LLM-judged task features [2], and shows
 
 *Example.* In `sphinx-doc__sphinx-9591`, the issue reports that a property's type annotation is not cross-referenced. The fix changes three lines in one method, `PyProperty.handle_signature`, three hops from the nearest definition the issue names. All 13 strong models fix it and none of the five weak models do. Patch size alone would call it easy.
 
-**Analyses.** (a) A pooled logistic model of 19,000 task × model outcomes with a fixed effect per run and standardized features; 95% CIs from 1000 task-level bootstrap resamples, plus leave-one-repository-out refits. (b) The same features fitted per model. (c) Ridge regression of item-response difficulty from [2], against [2]'s LLM-judged features. (d) Classifiers of each weak model's successes at increasing information levels, cross-validated with whole repositories held out (Section 3.3).
+**Analyses.** (a) A pooled logistic model of 19,000 task × model outcomes with a fixed effect per run and standardized features; 95% CIs from 1,000 task-level bootstrap resamples, plus leave-one-repository-out refits. (b) The same features fitted per model. (c) Ridge regression of item-response difficulty from [2], against [2]'s LLM-judged features. (d) Classifiers of each weak model's successes at increasing information levels, cross-validated with whole repositories held out (Section 3.3).
 
 **Competition tasks.** The competition's public tasks are merged pull requests in fastapi, requests, rich and httpx, named `<repo>_<PR number>`. I ran Gemma 4 31B (QAT, the competition's default agent and tools, vLLM on 4×L4) on all 129 of them in one Kaggle session: 6 minutes, 40 tool calls and 70 turns per task, 10.8 GPU-hours in total. I rebuilt each task from public git history (fix commit and its parent) and derived its fix spans from the diff. On 150 SWE-bench tasks this diff mapping matches the curated files in every case, with 91% precision and 83% recall at function level. 27 fastapi tasks have tests that import packages missing from the sandbox, as the forum reports [6]; Gemma solved 0 of them, and I exclude them, leaving 102. As a cross-check I use another entrant's public per-task outcomes on 55 of the same tasks [1].
 
@@ -117,7 +117,7 @@ The budget at stake is large. Weak models spend 64–97% of their calls on tasks
 
 Gemma 4 31B resolves 29 of 102 solvable tasks (28%). Fixes inside one function succeed **36%** of the time (n = 63), and fixes spanning several functions **15%** (n = 39; Fisher p = 0.025). That is the same drop as the SWE-bench weak cohort (Figure 4a). The split holds after dropping tasks whose fix touches no Python definition (38% vs 15%, p = 0.022). Patch size separates the tasks more sharply: 42% for patches of 10 lines or fewer against 11% above (p < 0.001). Fitted together, patch size carries the effect (−0.64 per log-line, p = 0.024) and function count adds nothing (p = 0.979). Multi-file alone is weaker (32% vs 16%, p = 0.133). This matches Section 3.3: what predicts Gemma's failures is the extent of the fix.
 
-The failures are expensive. 56 of 129 tasks hit the 6-minute limit and 10 overflowed the 32k context. Multi-function tasks time out 54% of the time against 30% for one-function tasks. Capping tasks with a patch over 10 lines at the median solve time (180 s) would save 22% of wall-clock time and lose 17% of solves. A random cap on the same number of tasks saves 19% and loses 21%. The other entrant's CPU runs give the same picture on their 55 tasks (50% vs 17% on 41 solvable) [1].
+The failures are expensive. 56 of 129 tasks hit the 6-minute limit and 10 overflowed the 32k context. Multi-function tasks time out 54% of the time against 30% for one-function tasks. Capping tasks with a patch over 10 lines at the median solve time (180 s) would save 22% of wall-clock time and lose 17% of solves. A random cap on the same number of tasks saves 19% and loses 21%, so on one run the edge is modest. The other entrant's CPU runs give the same picture on their 55 tasks (50% vs 17% on 41 solvable) [1].
 
 ## 4. What this means for a 12-hour budget
 
@@ -141,7 +141,7 @@ Apache-2.0 at github.com/Haresh276/where-the-fix-lives:
 - my per-task Gemma 4 31B outcomes on the 129 tasks and the notebook that produced them;
 - one script (`paper_numbers.py`) that regenerates every number in this paper from public data on CPU.
 
-*AI-use statement: code and analysis were developed with an AI coding assistant. The author designed the study, checked the results and wrote the final text.*
+*AI-use statement: an AI coding assistant (Claude) was used for the code, analysis and drafting. The author directed the study, reviewed the results and edited the final text.*
 
 ## References
 
