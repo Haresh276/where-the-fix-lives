@@ -421,6 +421,20 @@ if os.path.exists("out/gemma_own_joined.csv"):
                                    random_time_saved=round(float(np.mean(rs)), 3), random_solves_lost=round(float(np.mean(rl)), 3))
     G55 = pd.read_csv("out/gemma_public_joined.csv", index_col=0).join(J.resolved, how="inner")
     R["overlap_yosh"] = dict(n=len(G55), yosh_rate=round(G55["mean"].mean(), 3), own_rate=round(G55.resolved.mean(), 3))
+    CPF = "data/gemma/own/gemma31b_checkpoint_results_compact.csv"      # second full run: same setup + edit-plan checkpoint prompt
+    if os.path.exists(CPF):
+        from scipy.stats import binomtest
+        Cp = pd.read_csv(CPF).set_index("instance_id")
+        cpv = Cp.resolved.reindex(Sv.index)
+        lost = int(((Sv.resolved == 1) & (cpv == 0)).sum())
+        gained = int(((Sv.resolved == 0) & (cpv == 1)).sum())
+        R["checkpoint_arm"] = dict(n_tasks=int(len(Cp)), solved=int(cpv.sum()), rate=round(cpv.mean(), 3),
+                                   base_solved=int(Sv.resolved.sum()), gained=gained, lost=lost,
+                                   mcnemar_p=round(binomtest(min(lost, gained), lost + gained, 0.5).pvalue, 3) if lost + gained else 1.0,
+                                   timeouts=int((Cp.err == "timeout").sum()), base_timeouts=int((J.err == "timeout").sum()),
+                                   ctx=int((Cp.err == "ctx").sum()),
+                                   time_change=round(Cp.duration_s.sum() / J.duration_s.sum() - 1, 3),
+                                   flagged_solved=int(Cp.resolved.reindex(J[J.needs_missing_pkg].index).sum()))
     N["gemma_own"] = R
 
 json.dump(N, open("out/numbers.json", "w"), indent=1, default=float)
