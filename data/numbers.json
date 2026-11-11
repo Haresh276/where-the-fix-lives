@@ -1697,6 +1697,20 @@
    "n": 55,
    "yosh_rate": 0.318,
    "own_rate": 0.236
+  },
+  "checkpoint_arm": {
+   "n_tasks": 129,
+   "solved": 32,
+   "rate": 0.314,
+   "base_solved": 29,
+   "gained": 4,
+   "lost": 1,
+   "mcnemar_p": 0.375,
+   "timeouts": 46,
+   "base_timeouts": 56,
+   "ctx": 11,
+   "time_change": -0.043,
+   "flagged_solved": 0
   }
  }
 }
