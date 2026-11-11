@@ -14,6 +14,8 @@ fix sits adds little over a BM25 hit; knowing how many files/functions the edit 
 edit-plan checkpoint on public logs loses about half as many solves as random capping. My own run of Gemma 4 31B on all
 129 public competition tasks (Kaggle, 4xL4): 36% resolved for one-function fixes vs 15% for multi-function fixes, and 42%
 vs 11% split at a 10-line patch (p < 0.001), the same drop as the weak SWE-bench models.
+A second full run with the edit-plan checkpoint added to the prompt solved 32 vs 29 of 102 solvable tasks
+(4 gained, 1 lost; McNemar p = 0.375) with 46 instead of 56 timeouts: the right direction, not yet significant.
 
 The analysis runs on CPU with no API keys and no competition data. Only the Gemma run itself needs the Kaggle GPU notebook.
 
@@ -51,6 +53,8 @@ text cannot drift from the analysis. Seeds are fixed; a clean run reproduces `da
 | `data/features_gemma_own129.csv` | **Release:** fix-location features for all 129 public competition tasks |
 | `data/gemma/own/gemma31b_task_results_compact.csv` | **Release:** my per-task Gemma 4 31B outcomes (resolved, tool calls, seconds, failure type) |
 | `kaggle/wfl-gemma31b-129-tasks.ipynb` | The Kaggle notebook that produced those outcomes (4xL4, internet off) |
+| `kaggle/wfl-gemma31b-checkpoint-arm.ipynb` | The same notebook plus one cell adding the edit-plan checkpoint to the prompt |
+| `data/gemma/own/gemma31b_checkpoint_results_compact.csv` | **Release:** per-task outcomes of the checkpoint run |
 | `data/numbers.json` | All paper numbers |
 | `paper/` | Paper (Markdown + PDF) and figures |
 
