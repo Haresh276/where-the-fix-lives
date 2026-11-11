@@ -125,7 +125,7 @@ The failures are expensive. 56 of 129 tasks hit the 6-minute limit and 10 overfl
 2. **Checkpoint on the planned edit.** After locating the code and before editing, the agent should state how many files and functions it will change. A multi-file or multi-function plan is the low-yield half. For such a plan, make the smallest edit at the single most likely site, run one test, submit, and move on. A submitted partial patch costs nothing.
 3. **Spend the time where it pays.** Under a binding 12-hour cap, less time on low-yield tasks lets `max_time_minutes` rise for all.
 
-I did not run this checkpoint inside the agent; the simulations in Sections 3.3 and 3.4 are the evidence. This complements a harness study finding that call quality beats call volume for Gemma 4 [9]: it says which tasks to stop spending calls on.
+I tested point 2 directly. A second full run, identical except for the checkpoint text in the prompt, solved 32 of 102 solvable tasks against 29 (4 gained, 1 lost; exact McNemar p = 0.375) and hit the 6-minute limit on 46 tasks instead of 56. The direction matches the rule, but one run per arm cannot separate it from run-to-run noise. This complements a harness study finding that call quality beats call volume for Gemma 4 [9]: it says which tasks to stop spending calls on.
 
 ## 5. Limitations
 

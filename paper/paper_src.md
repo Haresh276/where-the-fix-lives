@@ -125,7 +125,7 @@ The failures are expensive. {{v:gemma_own.n_timeout}} of {{v:gemma_own.n_tasks}}
 2. **Checkpoint on the planned edit.** After locating the code and before editing, the agent should state how many files and functions it will change. A multi-file or multi-function plan is the low-yield half. For such a plan, make the smallest edit at the single most likely site, run one test, submit, and move on. A submitted partial patch costs nothing.
 3. **Spend the time where it pays.** Under a binding 12-hour cap, less time on low-yield tasks lets `max_time_minutes` rise for all.
 
-I did not run this checkpoint inside the agent; the simulations in Sections 3.3 and 3.4 are the evidence. This complements a harness study finding that call quality beats call volume for Gemma 4 [9]: it says which tasks to stop spending calls on.
+I tested point 2 directly. A second full run, identical except for the checkpoint text in the prompt, solved {{v:gemma_own.checkpoint_arm.solved}} of {{v:gemma_own.n_solvable}} solvable tasks against {{v:gemma_own.checkpoint_arm.base_solved}} ({{v:gemma_own.checkpoint_arm.gained}} gained, {{v:gemma_own.checkpoint_arm.lost}} lost; exact McNemar p = {{p:gemma_own.checkpoint_arm.mcnemar_p}}) and hit the 6-minute limit on {{v:gemma_own.checkpoint_arm.timeouts}} tasks instead of {{v:gemma_own.checkpoint_arm.base_timeouts}}. The direction matches the rule, but one run per arm cannot separate it from run-to-run noise. This complements a harness study finding that call quality beats call volume for Gemma 4 [9]: it says which tasks to stop spending calls on.
 
 ## 5. Limitations
 
