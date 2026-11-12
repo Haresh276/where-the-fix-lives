@@ -1,6 +1,6 @@
 # Where the Fix Lives
 
-Code, data and paper for **"Where the Fix Lives: Code-Graph Structure and the Triage Gap for Local Coding Agents"**
+Code, data and paper for **"Where the Fix Lives: Code-Graph Structure and the Triage Gap for Local Agents"**
 by Haresh G. (Kaggle: Haresh276), Gemma 4 Developer Agent Paper Track, 2026.
 
 **Question.** Which properties of a bug's fix location (whether the issue names anything connected to it in the code
@@ -9,11 +9,12 @@ an agent know?
 
 **Short answer.** On SWE-bench Verified (38 models), an issue that names nothing connected to the fix, and a fix
 that spans several files, predict failure; neither is visible before search (AUC 0.45-0.54), and the size of the edit
-is what separates wins from losses (AUC 0.63-0.72). Inside two full Gemma 4 31B runs on all 129 public competition
-tasks (258 traces), Gemma finds a file the fix changes in 92% of task-runs within a median 12 s, and that predicts
-nothing (AUC 0.44). The time of its first source edit predicts success with AUC 0.81, above the true patch size (0.71),
-and it transfers across runs. Task-runs with no source edit by 300 s solved 1 of 66 and used 37% of runtime.
-An edit-plan checkpoint in the prompt moved solves from 29 to 32 of 102 (p = 0.375, not significant).
+is what separates wins from losses (AUC 0.63-0.72). Across three full Gemma 4 31B runs on the public competition
+tasks, Gemma finds a file the fix changes in 92% of task-runs within a median 12 s, and that predicts nothing
+(AUC 0.44). When it first edits source code predicts success (AUC 0.81, above the true patch size at 0.71). At 180 s,
+runs that have edited go on to solve 49% and the rest 13%, and editing by 180 s still adds 1.74 log-odds once the
+true patch size is known. An edit-plan checkpoint moved solves from 29 to 32 of 102 (p = 0.375). Ten minutes per task
+instead of six solved 30 of 102, for 25% more time: more minutes do not help.
 
 ## Reproduce every number in the paper
 
@@ -24,7 +25,7 @@ python -I src/features.py data/verified_evals.json repos out/features_verified.c
 python -I src/localize.py data/verified_evals.json repos out/localize_verified.csv   # ~6 min
 python -I src/gemma_tasks.py                               # rebuild the 55 tasks with public outcomes from git
 python -I src/gemma_tasks.py --all                         # rebuild all 129 tasks of my own Gemma 4 31B runs
-python src/paper_numbers.py --boot 1000                    # -> out/numbers.json (~30 min on 4 CPU cores)
+python src/paper_numbers.py --boot 1000                    # -> out/numbers.json (~30 min on 4 CPU cores; also runs tenmin_numbers.py)
 python src/figures.py                                      # -> paper/fig*.png
 python src/fill_paper.py                                   # paper/paper_src.md + numbers.json -> paper/paper.md
 ```
@@ -41,7 +42,7 @@ text cannot drift from the analysis. Seeds are fixed; a clean run reproduces `da
 | `src/localize.py` | CPU BM25 localizer + structure of its predicted fix site |
 | `src/diffspans.py` | Maps a diff onto the definitions it touches (100% file agreement, 91% precision / 83% recall at function level vs. curated SWE-bench spans) |
 | `src/gemma_tasks.py` | Rebuilds public competition tasks (`<repo>_<PR>`) from git history and joins public Gemma 4 31B outcomes |
-| `src/paper_numbers.py` | Every number in the paper, with bootstrap CIs, within-release refits and the checkpoint simulation |
+| `src/paper_numbers.py` | Every number in the paper, with bootstrap CIs, within-release refits, the checkpoint simulation and the decision-time (landmark) trace analysis |
 | `src/fill_paper.py` | Fills the paper's numeric placeholders from `numbers.json` |
 | `data/features_verified.csv` | **Release:** fix-location features for all 500 SWE-bench Verified tasks |
 | `data/localize_verified.csv` | **Release:** BM25 localizer output and hit metrics for all 500 tasks |
@@ -51,6 +52,11 @@ text cannot drift from the analysis. Seeds are fixed; a clean run reproduces `da
 | `kaggle/wfl-gemma31b-129-tasks.ipynb` | The Kaggle notebook that produced those outcomes (4xL4, internet off) |
 | `kaggle/wfl-gemma31b-checkpoint-arm.ipynb` | The same notebook plus one cell adding the edit-plan checkpoint to the prompt |
 | `data/gemma/own/gemma31b_checkpoint_results_compact.csv` | **Release:** per-task outcomes of the checkpoint run |
+| `kaggle/wfl-gemma31b-tenminute-arm.ipynb` | The same notebook with 10 minutes per task instead of 6, on the 102 solvable tasks |
+| `data/gemma/own/gemma31b_tenmin_results_compact.csv` | **Release:** per-task outcomes of the ten-minute run |
+| `data/gemma/own/trace_features_tenmin.csv` | **Release:** first source edit and duration per task from the ten-minute run's traces |
+| `src/trace_rules.py` | The rule that decides which tool call is a source edit (reproduces `trace_features.csv` exactly) |
+| `src/tenmin_numbers.py` | Numbers for the ten-minute run (called by `paper_numbers.py`) |
 | `data/gemma/own/trace_features.csv` | **Release:** 30 behaviour features per task-run from all 258 agent traces (when the agent first opened a fixed file, first source edit, stated plan, tool mix, prompt size) |
 | `data/numbers.json` | All paper numbers |
 | `paper/` | Paper (Markdown + PDF) and figures |
