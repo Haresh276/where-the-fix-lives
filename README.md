@@ -7,17 +7,13 @@ by Haresh G. (Kaggle: Haresh276), Gemma 4 Developer Agent Paper Track, 2026.
 graph, how far it is, how many files and functions it touches) decide whether a coding agent fixes it, and when could
 an agent know?
 
-**Short answer.** An issue that names nothing connected to the fix, and a fix that spans several files, predict
-failure for 38 models in the mini-SWE-agent scaffold family (refits within single releases agree). Multi-file fixes cut
-weak models to 7.4% resolved. This cannot be read from the issue (AUC 0.45–0.54 before search); knowing where the true
-fix sits adds little over a BM25 hit; knowing how many files/functions the edit spans gives 0.63–0.72. A simulated
-edit-plan checkpoint on public logs loses about half as many solves as random capping. My own run of Gemma 4 31B on all
-129 public competition tasks (Kaggle, 4xL4): 36% resolved for one-function fixes vs 15% for multi-function fixes, and 42%
-vs 11% split at a 10-line patch (p < 0.001), the same drop as the weak SWE-bench models.
-A second full run with the edit-plan checkpoint added to the prompt solved 32 vs 29 of 102 solvable tasks
-(4 gained, 1 lost; McNemar p = 0.375) with 46 instead of 56 timeouts: the right direction, not yet significant.
-
-The analysis runs on CPU with no API keys and no competition data. Only the Gemma run itself needs the Kaggle GPU notebook.
+**Short answer.** On SWE-bench Verified (38 models), an issue that names nothing connected to the fix, and a fix
+that spans several files, predict failure; neither is visible before search (AUC 0.45-0.54), and the size of the edit
+is what separates wins from losses (AUC 0.63-0.72). Inside two full Gemma 4 31B runs on all 129 public competition
+tasks (258 traces), Gemma finds a file the fix changes in 92% of task-runs within a median 12 s, and that predicts
+nothing (AUC 0.44). The time of its first source edit predicts success with AUC 0.81, above the true patch size (0.71),
+and it transfers across runs. Task-runs with no source edit by 300 s solved 1 of 66 and used 37% of runtime.
+An edit-plan checkpoint in the prompt moved solves from 29 to 32 of 102 (p = 0.375, not significant).
 
 ## Reproduce every number in the paper
 
@@ -27,7 +23,7 @@ python src/fetch_data.py                                   # public inputs + bar
 python -I src/features.py data/verified_evals.json repos out/features_verified.csv   # ~5 min
 python -I src/localize.py data/verified_evals.json repos out/localize_verified.csv   # ~6 min
 python -I src/gemma_tasks.py                               # rebuild the 55 tasks with public outcomes from git
-python -I src/gemma_tasks.py --all                         # rebuild all 129 tasks of my own Gemma 4 31B run
+python -I src/gemma_tasks.py --all                         # rebuild all 129 tasks of my own Gemma 4 31B runs
 python src/paper_numbers.py --boot 1000                    # -> out/numbers.json (~30 min on 4 CPU cores)
 python src/figures.py                                      # -> paper/fig*.png
 python src/fill_paper.py                                   # paper/paper_src.md + numbers.json -> paper/paper.md
@@ -55,6 +51,7 @@ text cannot drift from the analysis. Seeds are fixed; a clean run reproduces `da
 | `kaggle/wfl-gemma31b-129-tasks.ipynb` | The Kaggle notebook that produced those outcomes (4xL4, internet off) |
 | `kaggle/wfl-gemma31b-checkpoint-arm.ipynb` | The same notebook plus one cell adding the edit-plan checkpoint to the prompt |
 | `data/gemma/own/gemma31b_checkpoint_results_compact.csv` | **Release:** per-task outcomes of the checkpoint run |
+| `data/gemma/own/trace_features.csv` | **Release:** 30 behaviour features per task-run from all 258 agent traces (when the agent first opened a fixed file, first source edit, stated plan, tool mix, prompt size) |
 | `data/numbers.json` | All paper numbers |
 | `paper/` | Paper (Markdown + PDF) and figures |
 
