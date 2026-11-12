@@ -154,23 +154,39 @@ if "traces" in N.get("gemma_own", {}):
     Tr = Tr[~Tr.task.map(Jg.needs_missing_pkg) & (Tr.task.map(Jg.n_gold_files) > 0)]
     te = np.where(Tr.t_edit >= 0, Tr.t_edit, np.nan)
     fig, (ax, bx) = plt.subplots(1, 2, figsize=(7.4, 2.9), gridspec_kw={"width_ratios": [1.35, 1]})
-    bins = np.arange(0, 390, 30)
-    for val, col, lab in [(1, GEMMA, "solved"), (0, "#a8a7a2", "failed")]:
-        m = (Tr.res == val).values
-        ax.hist(te[m & ~np.isnan(te)], bins=bins, color=col, alpha=0.85 if val else 0.6, label=f"{lab}",
-                histtype="stepfilled", edgecolor="white", linewidth=0.6)
-    nev_s, nev_f = int(((Tr.res == 1) & np.isnan(te)).sum()), int(((Tr.res == 0) & np.isnan(te)).sum())
-    ax.bar([375], [nev_f], width=22, color="#a8a7a2", alpha=0.6)
-    ax.bar([375], [nev_s], width=22, color=GEMMA, alpha=0.85)
+    te = np.where(Tr.t_edit >= 0, Tr.t_edit, 999)
+    ts_ = np.arange(30, 331, 15)
+
+    def wil(k, n, z=1.96):
+        if n == 0:
+            return np.nan, np.nan, np.nan
+        p_ = k / n
+        d_ = 1 + z * z / n
+        c_ = (p_ + z * z / (2 * n)) / d_
+        h_ = z * np.sqrt(p_ * (1 - p_) / n + z * z / (4 * n * n)) / d_
+        return p_, c_ - h_, c_ + h_
+    for flag, col, lab in [(True, GEMMA, "has edited source by then"), (False, "#8f8e88", "has not edited yet")]:
+        pts = []
+        for t in ts_:
+            run_ = Tr.dur.values > t
+            grp = run_ & ((te <= t) == flag)
+            pts.append(wil(int(Tr.res.values[grp].sum()), int(grp.sum())))
+        pts = np.array(pts)
+        ax.plot(ts_, pts[:, 0], "-o", color=col, ms=3, lw=1.6, label=lab)
+        ax.fill_between(ts_, pts[:, 1], pts[:, 2], color=col, alpha=0.15, lw=0)
+    L3 = TW["landmark"]["300"]
+    ax.annotate(f"{L3['not_edited_solved']} of {L3['not_edited']}", (300, 0), xytext=(-4, 14), textcoords="offset points",
+                fontsize=7, color="#5f5e59", ha="center", arrowprops=dict(arrowstyle="-", color="#8f8e88", lw=0.6))
     ax.axvline(180, color=INK, lw=0.9, ls=(0, (3, 2)))
-    ax.text(184, ax.get_ylim()[1] * 0.92, "half-time", fontsize=7, color=INK)
-    ax.set_xticks([0, 60, 120, 180, 240, 300, 375])
-    ax.set_xticklabels(["0", "60", "120", "180", "240", "300", "never"], fontsize=7.5)
-    ax.set_xlabel("seconds until the first source edit", fontsize=8)
-    ax.set_ylabel("task-runs", fontsize=8)
-    ax.legend(fontsize=7, loc="upper left")
+    ax.text(184, 0.84, "half-time", fontsize=7, color=INK)
+    ax.set_xlim(20, 340)
+    ax.set_ylim(0, 0.9)
+    ax.yaxis.set_major_formatter(matplotlib.ticker.PercentFormatter(1.0, decimals=0))
+    ax.set_xlabel("seconds into the task (task-runs still running)", fontsize=8)
+    ax.set_ylabel("eventually solved", fontsize=8)
+    ax.legend(fontsize=7, loc="lower left", frameon=True, framealpha=0.9)
     ax.grid(axis="x", visible=False)
-    ax.set_title(f"a  First source edit ({TW['n_traces'] - 60} task-runs, both runs)" if False else "a  When the first source edit happens", fontsize=8.5, color=INK, loc="left")
+    ax.set_title("a  What the agent's clock says, second by second", fontsize=8.5, color=INK, loc="left")
     A_ = TW["auc"]
     rows = [("first source edit (agent)", A_["first_edit"], GEMMA), ("true patch size (oracle)", A_["oracle_patch"], STRONG),
             ("true functions touched (oracle)", A_["oracle_funcs"], STRONG), ("opened a fixed file (agent)", A_["found_file"], "#a8a7a2")]

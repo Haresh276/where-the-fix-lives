@@ -442,7 +442,7 @@ if os.path.exists("out/gemma_own_joined.csv"):
         from sklearn.metrics import roc_auc_score as _auc
         Tr = pd.read_csv(TF)
         Tr["res"] = [(J.resolved if a == 0 else Cp.resolved)[t] for t, a in zip(Tr.task, Tr.arm)]
-        for c_ in ["needs_missing_pkg", "n_gold_files", "n_gold_nodes", "src_patch_lines"]:
+        for c_ in ["needs_missing_pkg", "n_gold_files", "n_gold_nodes", "src_patch_lines", "repo"]:
             Tr[c_] = Tr.task.map(J[c_])
         St = Tr[~Tr.needs_missing_pkg & (Tr.n_gold_files > 0)].copy()      # solvable tasks with a known source fix file
         St["te"] = np.where(St.t_edit >= 0, St.t_edit, 999)                # time of first source edit (999 = never)
@@ -518,6 +518,53 @@ if os.path.exists("out/gemma_own_joined.csv"):
                                           oracle_time_saved=round(osv, 3), oracle_solves_lost=round(ols, 3),
                                           random_time_saved=round(float(np.mean([r[0] for r in rr])), 3),
                                           random_solves_lost=round(float(np.mean([r[1] for r in rr])), 3))
+        # decision-time (landmark) view: at second t, among task-runs that are still running, compare those that
+        # have made a source edit with those that have not.  Only information the agent has at t is used.
+        W["landmark"] = {}
+        rem_all = St.dur.sum()
+        for t in (60, 120, 180, 240, 300):
+            Rn = St[St.dur > t]
+            ed = Rn.te <= t
+            W["landmark"][str(t)] = dict(running=int(len(Rn)), edited=int(ed.sum()), edited_solved=int(Rn[ed].res.sum()),
+                                         edited_rate=round(Rn[ed].res.mean(), 3), not_edited=int((~ed).sum()),
+                                         not_edited_solved=int(Rn[~ed].res.sum()), not_edited_rate=round(Rn[~ed].res.mean(), 3),
+                                         not_edited_rest_share=round((Rn[~ed].dur - t).sum() / rem_all, 3))
+        # does the edit clock add anything once the true patch size is known?  landmark at 180 s, task-clustered bootstrap
+        L_ = St[St.dur > H].copy()
+        L_["ed"] = (L_.te <= H).astype(float)
+        L_["lp"] = np.log1p(L_.src_patch_lines)
+        import statsmodels.api as _sm
+        _m = _sm.Logit(L_.res, _sm.add_constant(L_[["ed", "lp"]])).fit(disp=0)
+        gl = {t: g for t, g in L_.groupby("task")}
+        tl = L_.task.unique()
+        cb = []
+        for _ in range(2000):
+            b_ = pd.concat([gl[t] for t in rng.choice(tl, len(tl))])
+            try:
+                cb.append(_sm.Logit(b_.res, _sm.add_constant(b_[["ed", "lp"]])).fit(disp=0).params["ed"])
+            except Exception:
+                pass
+        W["joint_180"] = dict(n=int(len(L_)), ed=round(_m.params["ed"], 2), ed_ci=[round(np.percentile(cb, 2.5), 2), round(np.percentile(cb, 97.5), 2)],
+                              ed_p=float(_m.pvalues["ed"]), lp=round(_m.params["lp"], 2), lp_p=float(_m.pvalues["lp"]))
+        W["by_repo"] = {r: dict(n=int(len(g)), solved=int(g.res.sum()), auc_first_edit=round(_auc(g.res, -g.te), 3),
+                                auc_oracle_patch=round(_auc(g.res, -g.src_patch_lines), 3))
+                        for r, g in St.groupby("repo") if g.res.nunique() > 1 and len(g) >= 20}
+        # net effect of a stop rule when every stopped task (it has no patch, so the agent knows it failed) gets one retry,
+        # with the retry outcome taken from the other run of the same task
+        W["stop_retry"] = {}
+        for T in (180, 240, 300):
+            out = []
+            for a, b in ((0, 1), (1, 0)):
+                A_ = St[St.arm == a].set_index("task")
+                B_ = St[St.arm == b].set_index("task").reindex(A_.index)
+                stp = (A_.te > T) & (A_.dur > T)
+                Bs = B_[stp]
+                Bstp = Bs.te > T
+                out.append(dict(base=int(A_.res.sum()), stopped=int(stp.sum()), lost=int((stp & (A_.res == 1)).sum()),
+                                saved_h=round((A_[stp].dur - T).sum() / 3600, 2),
+                                retry_h=round(float(np.where(Bstp, np.minimum(Bs.dur, T), Bs.dur).sum()) / 3600, 2),
+                                retry_gain=int(Bs[~Bstp].res.sum()), total_h=round(A_.dur.sum() / 3600, 2)))
+            W["stop_retry"][str(T)] = out
         # the agent's own stated plan (checkpoint run only)
         x = St[St.arm == 1]
         pp = x[x.plan_files >= 0]
@@ -535,3 +582,8 @@ if os.path.exists("out/gemma_own_joined.csv"):
 
 json.dump(N, open("out/numbers.json", "w"), indent=1, default=float)
 print(json.dumps(N, indent=1, default=float))
+
+# third run (10 minutes per task) adds its own block
+import os, subprocess, sys  # noqa: E402
+if os.path.exists("data/gemma/own/gemma31b_tenmin_results_compact.csv"):
+    subprocess.run([sys.executable, "src/tenmin_numbers.py"], check=True)

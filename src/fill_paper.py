@@ -69,7 +69,7 @@ def sub(m):
     if kind == "auc":
         return f"{num(x['auc'])} [{num(x['ci'][0])}, {num(x['ci'][1])}]"
     if kind == "p":
-        return f"{x:.3f}".rstrip("0") if x >= 0.001 else "<0.001"
+        return f"{x:.3f}".rstrip("0").rstrip(".") if x >= 0.001 else "<0.001"
     raise KeyError(kind)
 
 
