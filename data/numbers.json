@@ -1834,6 +1834,151 @@
      "random_solves_lost": 0.362
     }
    },
+   "landmark": {
+    "60": {
+     "running": 195,
+     "edited": 15,
+     "edited_solved": 9,
+     "edited_rate": 0.6,
+     "not_edited": 180,
+     "not_edited_solved": 49,
+     "not_edited_rate": 0.272,
+     "not_edited_rest_share": 0.74
+    },
+    "120": {
+     "running": 176,
+     "edited": 38,
+     "edited_solved": 21,
+     "edited_rate": 0.553,
+     "not_edited": 138,
+     "not_edited_solved": 28,
+     "not_edited_rate": 0.203,
+     "not_edited_rest_share": 0.488
+    },
+    "180": {
+     "running": 151,
+     "edited": 35,
+     "edited_solved": 17,
+     "edited_rate": 0.486,
+     "not_edited": 116,
+     "not_edited_solved": 15,
+     "not_edited_rate": 0.129,
+     "not_edited_rest_share": 0.298
+    },
+    "240": {
+     "running": 129,
+     "edited": 48,
+     "edited_solved": 20,
+     "edited_rate": 0.417,
+     "not_edited": 81,
+     "not_edited_solved": 7,
+     "not_edited_rate": 0.086,
+     "not_edited_rest_share": 0.129
+    },
+    "300": {
+     "running": 82,
+     "edited": 45,
+     "edited_solved": 11,
+     "edited_rate": 0.244,
+     "not_edited": 37,
+     "not_edited_solved": 0,
+     "not_edited_rate": 0.0,
+     "not_edited_rest_share": 0.031
+    }
+   },
+   "joint_180": {
+    "n": 151,
+    "ed": 1.74,
+    "ed_ci": [
+     0.86,
+     3.03
+    ],
+    "ed_p": 0.00011784380928529654,
+    "lp": -0.51,
+    "lp_p": 0.009035280465558095
+   },
+   "by_repo": {
+    "fastapi": {
+     "n": 74,
+     "solved": 28,
+     "auc_first_edit": 0.797,
+     "auc_oracle_patch": 0.717
+    },
+    "requests": {
+     "n": 26,
+     "solved": 2,
+     "auc_first_edit": 0.573,
+     "auc_oracle_patch": 0.667
+    },
+    "rich": {
+     "n": 96,
+     "solved": 29,
+     "auc_first_edit": 0.906,
+     "auc_oracle_patch": 0.783
+    }
+   },
+   "stop_retry": {
+    "180": [
+     {
+      "base": 28,
+      "stopped": 54,
+      "lost": 6,
+      "saved_h": 1.99,
+      "retry_h": 2.86,
+      "retry_gain": 3,
+      "total_h": 6.86
+     },
+     {
+      "base": 31,
+      "stopped": 62,
+      "lost": 9,
+      "saved_h": 2.25,
+      "retry_h": 3.07,
+      "retry_gain": 4,
+      "total_h": 7.37
+     }
+    ],
+    "240": [
+     {
+      "base": 28,
+      "stopped": 38,
+      "lost": 3,
+      "saved_h": 0.84,
+      "retry_h": 2.66,
+      "retry_gain": 1,
+      "total_h": 6.86
+     },
+     {
+      "base": 31,
+      "stopped": 43,
+      "lost": 4,
+      "saved_h": 0.99,
+      "retry_h": 2.87,
+      "retry_gain": 3,
+      "total_h": 7.37
+     }
+    ],
+    "300": [
+     {
+      "base": 28,
+      "stopped": 19,
+      "lost": 0,
+      "saved_h": 0.22,
+      "retry_h": 1.58,
+      "retry_gain": 0,
+      "total_h": 6.86
+     },
+     {
+      "base": 31,
+      "stopped": 18,
+      "lost": 0,
+      "saved_h": 0.21,
+      "retry_h": 1.32,
+      "retry_gain": 0,
+      "total_h": 7.37
+     }
+    ]
+   },
    "plan": {
     "n_run": 99,
     "n_stated": 67,
@@ -1848,6 +1993,109 @@
     "auc_oracle_patch_same_tasks": 0.696,
     "big_true": 23,
     "big_true_planned_small": 14
+   }
+  },
+  "tenmin": {
+   "n": 102,
+   "solved": 30,
+   "rate": 0.294,
+   "run1_solved": 29,
+   "run2_solved": 32,
+   "vs_run1": {
+    "gained": 6,
+    "lost": 5,
+    "p": 1.0
+   },
+   "vs_run2": {
+    "gained": 4,
+    "lost": 6,
+    "p": 0.754
+   },
+   "solved_after_360": 4,
+   "hours": 10.41,
+   "run1_hours": 8.35,
+   "time_ratio": 1.25,
+   "extra_time": 0.247,
+   "at_wall": 18,
+   "run1_at_wall": 46,
+   "call_cap": 19,
+   "run1_call_cap": 14,
+   "wall_or_cap": 35,
+   "run1_wall_or_cap": 52,
+   "landmark": {
+    "180": {
+     "running": 82,
+     "not_edited": 58,
+     "not_edited_solved": 9,
+     "edited": 24,
+     "edited_solved": 7
+    },
+    "300": {
+     "running": 56,
+     "not_edited": 30,
+     "not_edited_solved": 2,
+     "edited": 26,
+     "edited_solved": 4
+    },
+    "360": {
+     "running": 45,
+     "not_edited": 23,
+     "not_edited_solved": 2,
+     "edited": 22,
+     "edited_solved": 2
+    }
+   },
+   "stop": {
+    "180": {
+     "stopped": 58,
+     "lost": 9,
+     "saved_h": 3.91,
+     "hours_after": 5.77,
+     "saved_share": 0.404,
+     "solved_after": 21
+    },
+    "240": {
+     "stopped": 45,
+     "lost": 6,
+     "saved_h": 2.72,
+     "hours_after": 6.96,
+     "saved_share": 0.281,
+     "solved_after": 24
+    },
+    "300": {
+     "stopped": 30,
+     "lost": 2,
+     "saved_h": 1.59,
+     "hours_after": 8.09,
+     "saved_share": 0.164,
+     "solved_after": 28
+    },
+    "360": {
+     "stopped": 23,
+     "lost": 2,
+     "saved_h": 1.02,
+     "hours_after": 8.66,
+     "saved_share": 0.106,
+     "solved_after": 28
+    },
+    "400": {
+     "stopped": 14,
+     "lost": 0,
+     "saved_h": 0.52,
+     "hours_after": 9.16,
+     "saved_share": 0.054,
+     "solved_after": 30
+    }
+   },
+   "n_traces": 102,
+   "auc_first_edit": 0.75,
+   "after_360_share": 0.183,
+   "late_edit_solves": {
+    "n": 2,
+    "edit_times": [
+     367,
+     393
+    ]
    }
   }
  }
