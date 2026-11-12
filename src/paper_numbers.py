@@ -435,6 +435,102 @@ if os.path.exists("out/gemma_own_joined.csv"):
                                    ctx=int((Cp.err == "ctx").sum()),
                                    time_change=round(Cp.duration_s.sum() / J.duration_s.sum() - 1, 3),
                                    flagged_solved=int(Cp.resolved.reindex(J[J.needs_missing_pkg].index).sum()))
+
+    # ------------------------------------------------------------ agent traces of both runs (258 ATIF traces)
+    TF = "data/gemma/own/trace_features.csv"
+    if os.path.exists(TF) and os.path.exists(CPF):
+        from sklearn.metrics import roc_auc_score as _auc
+        Tr = pd.read_csv(TF)
+        Tr["res"] = [(J.resolved if a == 0 else Cp.resolved)[t] for t, a in zip(Tr.task, Tr.arm)]
+        for c_ in ["needs_missing_pkg", "n_gold_files", "n_gold_nodes", "src_patch_lines"]:
+            Tr[c_] = Tr.task.map(J[c_])
+        St = Tr[~Tr.needs_missing_pkg & (Tr.n_gold_files > 0)].copy()      # solvable tasks with a known source fix file
+        St["te"] = np.where(St.t_edit >= 0, St.t_edit, 999)                # time of first source edit (999 = never)
+        St["tg"] = np.where(St.t_gold >= 0, St.t_gold, 999)                # time the agent first opened a fixed file
+        W = dict(n_tasks=int(St.task.nunique()), n_traces=int(len(Tr)))
+        loc, ged = St.t_gold >= 0, St.n_gold_edited > 0
+        W["found_fix_file"] = round(loc.mean(), 3)
+        W["t_found_median"] = float(St[loc].t_gold.median())
+        W["found_within_30s"] = round(St.t_gold.between(0, 30).mean(), 3)
+        W["call_found_median"] = float(St[loc].k_gold.median())
+        W["edited_fix_file"] = round(ged.mean(), 3)
+        W["t_first_edit_median"] = float(St[St.te < 999].te.median())
+        W["found_to_edit_median"] = float((St[(St.te < 999) & loc].te - St[(St.te < 999) & loc].tg).median())
+        W["time_before_first_edit"] = round(np.where(St.te < 999, St.te, St.dur).sum() / St.dur.sum(), 3)
+        W["ctx_near_limit"] = round((St.max_prompt_tok >= 14000).mean(), 3)
+        W["graph_calls"] = int(Tr.n_graph.sum())
+        W["all_calls"] = int(Tr.n_calls.sum())
+        W["graph_tasks"] = int((St.n_graph > 0).sum())
+        W["graph_tasks_solved"] = int(St[St.n_graph > 0].res.sum())
+        W["funnel"] = {}
+        for a in (0, 1):
+            x = St[St.arm == a]
+            l_, g_ = x.t_gold >= 0, x.n_gold_edited > 0
+            W["funnel"][str(a)] = dict(n=int(len(x)), found=int(l_.sum()), edited=int(g_.sum()), solved=int(x.res.sum()),
+                                       never_found=int((~l_ & (x.res == 0)).sum()), found_not_edited=int((l_ & ~g_ & (x.res == 0)).sum()),
+                                       edited_failed=int((g_ & (x.res == 0)).sum()))
+        W["funnel_total"] = {k: int(sum(W["funnel"][r][k] for r in ("0", "1"))) for k in W["funnel"]["0"]}
+        # which signals separate solved from failed tasks?  task-clustered bootstrap over both runs
+        gg = {t: g for t, g in St.groupby("task")}
+        tk = St.task.unique()
+        sig = dict(first_edit=lambda d: -d.te, found_file=lambda d: -d.tg, oracle_patch=lambda d: -d.src_patch_lines,
+                   oracle_funcs=lambda d: -d.n_gold_nodes)
+        bsv = {k: [] for k in sig}
+        dif = []
+        for _ in range(2000):
+            bs_ = pd.concat([gg[t] for t in rng.choice(tk, len(tk))])
+            for k, f in sig.items():
+                bsv[k].append(_auc(bs_.res, f(bs_)))
+            dif.append(bsv["first_edit"][-1] - bsv["oracle_patch"][-1])
+        W["auc"] = {k: dict(auc=round(_auc(St.res, f(St)), 3), ci=[round(np.percentile(bsv[k], 2.5), 3), round(np.percentile(bsv[k], 97.5), 3)])
+                    for k, f in sig.items()}
+        W["auc_first_edit_minus_oracle_ci"] = [round(np.percentile(dif, 2.5), 3), round(np.percentile(dif, 97.5), 3)]
+        Aa = St[St.arm == 0].set_index("task")
+        Bb = St[St.arm == 1].set_index("task").reindex(Aa.index)
+        W["cross_run"] = dict(auc_a_to_b=round(_auc(Bb.res, -Aa.te), 3), auc_b_to_a=round(_auc(Aa.res, -Bb.te), 3),
+                              spearman_t_edit=round(spearmanr(Aa.te, Bb.te)[0], 2), outcome_agreement=round((Aa.res == Bb.res).mean(), 3),
+                              both=int(((Aa.res == 1) & (Bb.res == 1)).sum()), a_only=int(((Aa.res == 1) & (Bb.res == 0)).sum()),
+                              b_only=int(((Aa.res == 0) & (Bb.res == 1)).sum()))
+        H = 180                                                             # half of the 6-minute task budget
+        e_ = St.te <= H
+        W["half_time"] = dict(threshold_s=H, early_n=int(e_.sum()), early_rate=round(St[e_].res.mean(), 3), late_n=int((~e_).sum()),
+                              late_rate=round(St[~e_].res.mean(), 3),
+                              cross_early_rate=round(pd.concat([Bb[Aa.te <= H].res, Aa[Bb.te <= H].res]).mean(), 3),
+                              cross_late_rate=round(pd.concat([Bb[Aa.te > H].res, Aa[Bb.te > H].res]).mean(), 3))
+        nev = St.te > 300
+        W["no_edit_by_300"] = dict(n=int(nev.sum()), solved=int(St[nev].res.sum()), time_share=round(St[nev].dur.sum() / St.dur.sum(), 3))
+        # stop rule: at H seconds, stop a task that has made no source edit.  A solve is lost if the task was stopped and finished later than H.
+        W["stop_rule"] = {}
+        for a in (0, 1):
+            x = St[St.arm == a]
+            tot_ = x.dur.sum()
+
+            def sim(mask):
+                return ((x[mask].dur - H).clip(lower=0).sum() / tot_, ((x.res == 1) & mask & (x.dur > H)).sum() / x.res.sum())
+            late = x.te > H
+            n_ = int(late.sum())
+            sv, ls = sim(late)
+            om = pd.Series(False, index=x.index)
+            om[x.sort_values("src_patch_lines", ascending=False).index[:n_]] = True
+            osv, ols = sim(om)
+            rr = [sim(pd.Series(rng.permutation(late.values), index=x.index)) for _ in range(2000)]
+            W["stop_rule"][str(a)] = dict(stopped=n_, time_saved=round(sv, 3), solves_lost=round(ls, 3),
+                                          oracle_time_saved=round(osv, 3), oracle_solves_lost=round(ols, 3),
+                                          random_time_saved=round(float(np.mean([r[0] for r in rr])), 3),
+                                          random_solves_lost=round(float(np.mean([r[1] for r in rr])), 3))
+        # the agent's own stated plan (checkpoint run only)
+        x = St[St.arm == 1]
+        pp = x[x.plan_files >= 0]
+        W["plan"] = dict(n_run=int(len(x)), n_stated=int(len(pp)), rate_stated=round(pp.res.mean(), 3),
+                         n_not_stated=int((x.plan_files < 0).sum()), solved_not_stated=int(x[x.plan_files < 0].res.sum()),
+                         not_stated_found_file=round((x[x.plan_files < 0].t_gold >= 0).mean(), 3),
+                         files_match=round((pp.plan_files == pp.n_gold_files).mean(), 3),
+                         one_func_agree=round(((pp.plan_funcs <= 1) == (pp.n_gold_nodes <= 1)).mean(), 3),
+                         lines_spearman=round(spearmanr(pp.plan_lines.clip(0), pp.src_patch_lines)[0], 2),
+                         auc_plan_lines=round(_auc(pp.res, -pp.plan_lines.where(pp.plan_lines >= 0, 10)), 3),
+                         auc_oracle_patch_same_tasks=round(_auc(pp.res, -pp.src_patch_lines), 3),
+                         big_true=int((pp.src_patch_lines > 10).sum()), big_true_planned_small=int(((pp.src_patch_lines > 10) & (pp.plan_lines <= 10)).sum()))
+        R["traces"] = W
     N["gemma_own"] = R
 
 json.dump(N, open("out/numbers.json", "w"), indent=1, default=float)

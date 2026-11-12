@@ -142,4 +142,50 @@ bx.set_title(f"b  By patch size ({fp(G['patch']['p'])})", fontsize=8.5, color=IN
 fig.tight_layout()
 fig.savefig("paper/fig4_gemma.png", dpi=220)
 plt.close(fig)
+
+# ---------------- Fig 5: inside the Gemma 4 31B runs (258 traces)
+import numpy as np  # noqa: E402
+if "traces" in N.get("gemma_own", {}):
+    TW = N["gemma_own"]["traces"]
+    Tr = pd.read_csv("data/gemma/own/trace_features.csv")
+    Jg = pd.read_csv("out/gemma_own_joined.csv", index_col=0)
+    Cg = pd.read_csv("data/gemma/own/gemma31b_checkpoint_results_compact.csv").set_index("instance_id")
+    Tr["res"] = [(Jg.resolved if a == 0 else Cg.resolved)[t] for t, a in zip(Tr.task, Tr.arm)]
+    Tr = Tr[~Tr.task.map(Jg.needs_missing_pkg) & (Tr.task.map(Jg.n_gold_files) > 0)]
+    te = np.where(Tr.t_edit >= 0, Tr.t_edit, np.nan)
+    fig, (ax, bx) = plt.subplots(1, 2, figsize=(7.4, 2.9), gridspec_kw={"width_ratios": [1.35, 1]})
+    bins = np.arange(0, 390, 30)
+    for val, col, lab in [(1, GEMMA, "solved"), (0, "#a8a7a2", "failed")]:
+        m = (Tr.res == val).values
+        ax.hist(te[m & ~np.isnan(te)], bins=bins, color=col, alpha=0.85 if val else 0.6, label=f"{lab}",
+                histtype="stepfilled", edgecolor="white", linewidth=0.6)
+    nev_s, nev_f = int(((Tr.res == 1) & np.isnan(te)).sum()), int(((Tr.res == 0) & np.isnan(te)).sum())
+    ax.bar([375], [nev_f], width=22, color="#a8a7a2", alpha=0.6)
+    ax.bar([375], [nev_s], width=22, color=GEMMA, alpha=0.85)
+    ax.axvline(180, color=INK, lw=0.9, ls=(0, (3, 2)))
+    ax.text(184, ax.get_ylim()[1] * 0.92, "half-time", fontsize=7, color=INK)
+    ax.set_xticks([0, 60, 120, 180, 240, 300, 375])
+    ax.set_xticklabels(["0", "60", "120", "180", "240", "300", "never"], fontsize=7.5)
+    ax.set_xlabel("seconds until the first source edit", fontsize=8)
+    ax.set_ylabel("task-runs", fontsize=8)
+    ax.legend(fontsize=7, loc="upper left")
+    ax.grid(axis="x", visible=False)
+    ax.set_title(f"a  First source edit ({TW['n_traces'] - 60} task-runs, both runs)" if False else "a  When the first source edit happens", fontsize=8.5, color=INK, loc="left")
+    A_ = TW["auc"]
+    rows = [("first source edit (agent)", A_["first_edit"], GEMMA), ("true patch size (oracle)", A_["oracle_patch"], STRONG),
+            ("true functions touched (oracle)", A_["oracle_funcs"], STRONG), ("opened a fixed file (agent)", A_["found_file"], "#a8a7a2")]
+    for i, (lab, d, col) in enumerate(rows[::-1]):
+        bx.errorbar([d["auc"]], [i], xerr=[[d["auc"] - d["ci"][0]], [d["ci"][1] - d["auc"]]], fmt="o", ms=5, color=col, elinewidth=1.3)
+        bx.text(d["ci"][1] + 0.015, i, f"{d['auc']:.2f}", va="center", fontsize=7.5, color=INK)
+    bx.axvline(0.5, color=MUTED, lw=0.8, ls=(0, (2, 2)))
+    bx.set_yticks(range(len(rows)))
+    bx.set_yticklabels([r[0] for r in rows[::-1]], fontsize=7.5)
+    bx.set_xlim(0.3, 1.0)
+    bx.set_xlabel("AUC, solved vs failed", fontsize=8)
+    bx.grid(axis="y", visible=False)
+    bx.set_title("b  What separates the outcomes", fontsize=8.5, color=INK, loc="left")
+    fig.tight_layout()
+    fig.savefig("paper/fig5_traces.png", dpi=220)
+    plt.close(fig)
+
 print("ok")

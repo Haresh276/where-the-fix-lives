@@ -67,7 +67,8 @@ for t in TASKS:
                      gold_ambiguity_max=max([len(g.by_short[g.nodes[x]["qual"].rsplit(".", 1)[-1]]) for x in gold] or [0]),
                      blast2=(len(g.bfs(gold, 2)) - len(gold)) if gold else 0,
                      src_patch_lines=sum(int(a) + int(b) for a, b, f in numstat if a != "-" and is_source(f)),
-                     needs_missing_pkg=needs, title=subject))
+                     needs_missing_pkg=needs, title=subject,
+                     gold_files=";".join(f for a_, b_, f in numstat if is_source(f))))
     gr.close()
 F = pd.DataFrame(rows).set_index("task_id")
 if ALL:
