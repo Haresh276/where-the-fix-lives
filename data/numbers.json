@@ -1711,6 +1711,144 @@
    "ctx": 11,
    "time_change": -0.043,
    "flagged_solved": 0
+  },
+  "traces": {
+   "n_tasks": 99,
+   "n_traces": 258,
+   "found_fix_file": 0.924,
+   "t_found_median": 12.0,
+   "found_within_30s": 0.823,
+   "call_found_median": 1.0,
+   "edited_fix_file": 0.677,
+   "t_first_edit_median": 178.5,
+   "found_to_edit_median": 148.0,
+   "time_before_first_edit": 0.774,
+   "ctx_near_limit": 0.773,
+   "graph_calls": 70,
+   "all_calls": 6361,
+   "graph_tasks": 17,
+   "graph_tasks_solved": 0,
+   "funnel": {
+    "0": {
+     "n": 99,
+     "found": 90,
+     "edited": 62,
+     "solved": 28,
+     "never_found": 9,
+     "found_not_edited": 27,
+     "edited_failed": 35
+    },
+    "1": {
+     "n": 99,
+     "found": 93,
+     "edited": 72,
+     "solved": 31,
+     "never_found": 6,
+     "found_not_edited": 19,
+     "edited_failed": 43
+    }
+   },
+   "funnel_total": {
+    "n": 198,
+    "found": 183,
+    "edited": 134,
+    "solved": 59,
+    "never_found": 15,
+    "found_not_edited": 46,
+    "edited_failed": 78
+   },
+   "auc": {
+    "first_edit": {
+     "auc": 0.813,
+     "ci": [
+      0.735,
+      0.885
+     ]
+    },
+    "found_file": {
+     "auc": 0.444,
+     "ci": [
+      0.341,
+      0.555
+     ]
+    },
+    "oracle_patch": {
+     "auc": 0.715,
+     "ci": [
+      0.61,
+      0.81
+     ]
+    },
+    "oracle_funcs": {
+     "auc": 0.635,
+     "ci": [
+      0.536,
+      0.725
+     ]
+    }
+   },
+   "auc_first_edit_minus_oracle_ci": [
+    -0.0,
+    0.201
+   ],
+   "cross_run": {
+    "auc_a_to_b": 0.806,
+    "auc_b_to_a": 0.764,
+    "spearman_t_edit": 0.67,
+    "outcome_agreement": 0.949,
+    "both": 27,
+    "a_only": 1,
+    "b_only": 4
+   },
+   "half_time": {
+    "threshold_s": 180,
+    "early_n": 74,
+    "early_rate": 0.595,
+    "late_n": 124,
+    "late_rate": 0.121,
+    "cross_early_rate": 0.554,
+    "cross_late_rate": 0.145
+   },
+   "no_edit_by_300": {
+    "n": 66,
+    "solved": 1,
+    "time_share": 0.368
+   },
+   "stop_rule": {
+    "0": {
+     "stopped": 62,
+     "time_saved": 0.29,
+     "solves_lost": 0.214,
+     "oracle_time_saved": 0.259,
+     "oracle_solves_lost": 0.393,
+     "random_time_saved": 0.219,
+     "random_solves_lost": 0.315
+    },
+    "1": {
+     "stopped": 62,
+     "time_saved": 0.305,
+     "solves_lost": 0.29,
+     "oracle_time_saved": 0.253,
+     "oracle_solves_lost": 0.29,
+     "random_time_saved": 0.229,
+     "random_solves_lost": 0.362
+    }
+   },
+   "plan": {
+    "n_run": 99,
+    "n_stated": 67,
+    "rate_stated": 0.448,
+    "n_not_stated": 32,
+    "solved_not_stated": 1,
+    "not_stated_found_file": 0.969,
+    "files_match": 0.806,
+    "one_func_agree": 0.821,
+    "lines_spearman": 0.62,
+    "auc_plan_lines": 0.619,
+    "auc_oracle_patch_same_tasks": 0.696,
+    "big_true": 23,
+    "big_true_planned_small": 14
+   }
   }
  }
 }
